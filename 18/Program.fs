@@ -1,3 +1,4 @@
+// Реализация с использованием хвостовой рекурсии
 let rec maxPathSumTail (triangle: int list list) rowIndex (acc: int list) : int =
     match rowIndex with
     | -1 -> acc.[0] // Возвращаем верхнюю вершину, где накоплена максимальная сумма
