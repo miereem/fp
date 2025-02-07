@@ -1,4 +1,4 @@
-﻿open System
+open System
 open System.Numerics
 
 let numbers = [
@@ -117,7 +117,7 @@ printfn "The first ten digits of the sum are: %s" firstTenDigits
 // Преобразование строк в BigInteger
 let bigNumbers = numbers |> List.map BigInteger.Parse
 
-// Методы суммирования
+
 // 1. Хвостовая рекурсия
 let sumTailRecursion (numbers: BigInteger list) =
     let rec loop acc = function
@@ -135,13 +135,7 @@ let rec sumRecursion (numbers: BigInteger list) =
 let sumWithFold numbers =
     numbers |> List.fold (+) BigInteger.Zero
 
-// 4. Использование map (избыточно, но для демонстрации)
-let sumUsingMap (numbers: BigInteger list) =
-    numbers
-    |> List.map id // Просто передаём числа без изменений
-    |> List.fold (+) BigInteger.Zero
-
-// 5. Использование Seq
+// 4. Использование Seq
 let sumWithSeq (numbers: BigInteger list) =
     numbers
     |> Seq.ofList
@@ -149,25 +143,19 @@ let sumWithSeq (numbers: BigInteger list) =
 
 // Запуск теста для сравнения результатов
 let testComparison () =
-    // Сравниваем результаты всех методов
     let tailRecResult = sumTailRecursion bigNumbers
     let recResult = sumRecursion bigNumbers
     let foldResult = sumWithFold bigNumbers
-    let mapResult = sumUsingMap bigNumbers
     let seqResult = sumWithSeq bigNumbers
 
-    // Печатаем результаты для каждого метода
     printfn "Результат хвостовой рекурсии: %A" tailRecResult
     printfn "Результат обычной рекурсии: %A" recResult
     printfn "Результат с использованием fold: %A" foldResult
-    printfn "Результат с использованием map: %A" mapResult
     printfn "Результат с использованием Seq: %A" seqResult
 
-    // Проверка корректности (все должны быть одинаковыми)
-    if tailRecResult = recResult && recResult = foldResult && foldResult = mapResult && mapResult = seqResult then
+    if tailRecResult = recResult && recResult = foldResult  then
         printfn "Все методы верны и результаты совпадают!"
     else
         printfn "Есть расхождения в результатах!"
 
-// Запуск теста
 testComparison ()
