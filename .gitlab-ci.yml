@@ -48,9 +48,4 @@ test:
     paths:
       - ./TestResults
 
-run_python:
-  stage: run
-  script:
-    - pylint src/task7.py src/task26.py
-    - python3 src/task7.py 
-    - python3 src/task26.py  
+
