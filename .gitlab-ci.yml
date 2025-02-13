@@ -17,10 +17,9 @@ cache:
 
 setup:
   stage: setup
-  image: mcr.microsoft.com/dotnet/sdk:8.0
   before_script:
     - apt-get update -y
-    - apt-get install -y python3 python3-pip fsharp mono-complete
+    - apt-get install -y dotnet-sdk-8.0 python3 python3-pip fsharp mono-complete
   script:
     - dotnet --version
     - python3 --version
