@@ -16,11 +16,11 @@ let empty (capacity : int) : MultiSet<'T> =
         Size = 0
     }
 
-/// Хэш-функция с линейным пробингом
+
 let private findSlot (hash : int) (capacity : int) (i : int) : int =
     (hash + i) % capacity
 
-/// Добавление элемента в мультимножество
+
 let add (element : 'T) (count : int) (set : MultiSet<'T>) : MultiSet<'T> =
     if count <= 0 then set
     else
@@ -39,7 +39,7 @@ let add (element : 'T) (count : int) (set : MultiSet<'T>) : MultiSet<'T> =
             | _ -> loop (i + 1)
         loop 0
 
-/// Получение количества вхождений элемента
+
 let count (element : 'T) (set : MultiSet<'T>) : int =
     let hash = abs (element.GetHashCode())
     let rec loop i =
@@ -50,11 +50,11 @@ let count (element : 'T) (set : MultiSet<'T>) : int =
         | _ -> loop (i + 1)
     loop 0
 
-/// Проверка, пустое ли мультимножество
+
 let isEmpty (set : MultiSet<'T>) : bool =
     set.Size = 0
 
-/// Операция объединения (моноид)
+
 let union (set1 : MultiSet<'T>) (set2 : MultiSet<'T>) : MultiSet<'T> =
     let merged = Array.copy set1.Table
     set2.Table
@@ -63,6 +63,6 @@ let union (set1 : MultiSet<'T>) (set2 : MultiSet<'T>) : MultiSet<'T> =
         | None -> ())
     { set1 with Table = merged; Size = set1.Size + set2.Size }
 
-/// Пустое мультимножество как нейтральный элемент моноида
+
 let zero<'T when 'T : equality> : MultiSet<'T> = empty 16
 
