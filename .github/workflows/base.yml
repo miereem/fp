@@ -1,0 +1,74 @@
+name: Lab2
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y dotnet-sdk-8.0 python3 python3-pip fsharp
+          sudo apt-get update
+          sudo apt-get install mono-complete
+          
+
+  format:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Format F# code with Fantomas
+        run: | 
+          dotnet tool install fantomas-tool --global --version "4.*"
+          fantomas src --recurse
+          
+      - name: Upload formatted files
+        uses: actions/upload-artifact@v3
+        with:
+          name: formatted-src
+          path: src
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: format
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Build task
+        run: |
+          dotnet build src --configuration Release
+          
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: '**/bin/Release'
+
+  task:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Run task application
+        run: |
+          dotnet run --project src --configuration Release
+
+      - name: Run task tests
+        run: cd src/tests && dotnet test
