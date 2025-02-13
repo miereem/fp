@@ -1,33 +1,47 @@
-image: mcr.microsoft.com/dotnet/sdk:8.0
-
 stages:
+  - setup
+  - format
   - build
   - test
-  - deploy
+  - python-lint
 
 variables:
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_ROOT: "/usr/share/dotnet"
+  PATH: "$DOTNET_ROOT:$PATH"
+
+cache:
+  paths:
+    - .nuget/packages/
+    - src/**/bin/
+    - src/**/obj/
+
+setup:
+  stage: setup
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  before_script:
+    - apt-get update -y
+    - apt-get install -y python3 python3-pip fsharp mono-complete
+  script:
+    - dotnet --version
+    - python3 --version
+
+format:
+  stage: format
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - dotnet new tool-manifest
+    - dotnet tool install fantomas-tool --version "4.*"
+    - dotnet fantomas src --recurse
+    - dotnet fantomas tests --recurse
+  artifacts:
+    paths:
+      - src/
 
 build:
   stage: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
   script:
-    - dotnet restore
-    - dotnet build --configuration Release --no-restore
+    - dotnet build src --configuration Release
   artifacts:
     paths:
-      - bin/Release/net6.0/
-    expire_in: 1 week
-
-test:
-  stage: test
-  script:
-    - dotnet test --no-restore --verbosity normal
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying application..."
-    # Add your deployment scripts here
-  only:
-    - main
+      - src/**/bin/Release/
