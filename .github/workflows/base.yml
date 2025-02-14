@@ -51,7 +51,7 @@ jobs:
 
       - name: Build task
         run: |
-          dotnet build src --configuration Release
+          dotnet build --configuration Release
           
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -68,7 +68,7 @@ jobs:
 
       - name: Run task application
         run: |
-          dotnet run --project src --configuration Release
+          dotnet run --project --configuration Release
 
       - name: Run task tests
         run: cd src/tests && dotnet test
