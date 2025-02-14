@@ -1,3 +1,5 @@
+module Module18
+
 // Реализация с использованием хвостовой рекурсии
 let rec maxPathSumTail (triangle: int list list) rowIndex (acc: int list) : int =
     match rowIndex with
@@ -9,6 +11,8 @@ let rec maxPathSumTail (triangle: int list list) rowIndex (acc: int list) : int 
         maxPathSumTail triangle (rowIndex - 1) updatedAcc
 
 let maxPathSumTailWrapper (triangle: int list list) : int =
+    if triangle.IsEmpty then 0
+    else
     let lastRow = List.last triangle
     maxPathSumTail triangle (List.length triangle - 2) lastRow
 
@@ -22,10 +26,15 @@ let rec maxPathSumRecursive (triangle: int list list) rowIndex colIndex : int =
             (maxPathSumRecursive triangle (rowIndex + 1) (colIndex + 1))
 
 let maxPathSumRecursiveWrapper (triangle: int list list) : int =
+    if triangle.IsEmpty then 0
+    else
     maxPathSumRecursive triangle 0 0
 
 // Модульная реализация с использованием reduce
 let maxPathSumModular (triangle: int list list) : int =
+    if List.isEmpty triangle then
+        0
+    else
     triangle
     |> List.rev
     |> List.reduce (fun (acc: int list) (row: int list) ->

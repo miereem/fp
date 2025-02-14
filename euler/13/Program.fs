@@ -1,3 +1,5 @@
+module Module13
+
 open System
 open System.Numerics
 
@@ -114,48 +116,30 @@ let firstTenDigits = totalSum.ToString().Substring(0, 10)
 printfn "The first ten digits of the sum are: %s" firstTenDigits
 
 
-// Преобразование строк в BigInteger
+
 let bigNumbers = numbers |> List.map BigInteger.Parse
 
 
-// 1. Хвостовая рекурсия
+
 let sumTailRecursion (numbers: BigInteger list) =
     let rec loop acc = function
         | [] -> acc
         | hd :: tl -> loop (acc + hd) tl
     loop BigInteger.Zero numbers
 
-// 2. Обычная рекурсия
+
 let rec sumRecursion (numbers: BigInteger list) =
     match numbers with
     | [] -> BigInteger.Zero
     | hd :: tl -> hd + sumRecursion tl
 
-// 3. Использование fold
+
 let sumWithFold numbers =
     numbers |> List.fold (+) BigInteger.Zero
 
-// 4. Использование Seq
+
 let sumWithSeq (numbers: BigInteger list) =
     numbers
     |> Seq.ofList
     |> Seq.fold (+) BigInteger.Zero
 
-// Запуск теста для сравнения результатов
-let testComparison () =
-    let tailRecResult = sumTailRecursion bigNumbers
-    let recResult = sumRecursion bigNumbers
-    let foldResult = sumWithFold bigNumbers
-    let seqResult = sumWithSeq bigNumbers
-
-    printfn "Результат хвостовой рекурсии: %A" tailRecResult
-    printfn "Результат обычной рекурсии: %A" recResult
-    printfn "Результат с использованием fold: %A" foldResult
-    printfn "Результат с использованием Seq: %A" seqResult
-
-    if tailRecResult = recResult && recResult = foldResult  then
-        printfn "Все методы верны и результаты совпадают!"
-    else
-        printfn "Есть расхождения в результатах!"
-
-testComparison ()
