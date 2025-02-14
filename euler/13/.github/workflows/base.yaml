@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "13/**"
+      - "euler/13/**"
   pull_request:
     branches:
       - master
