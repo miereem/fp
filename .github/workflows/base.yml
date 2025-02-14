@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'euler/**'
+      - 'multiset/**'
   pull_request:
     branches:
       - master
@@ -21,36 +21,36 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y dotnet-sdk-8.0 python3 python3-pip fsharp
-          sudo apt-get update
-          sudo apt-get install mono-complete
+          sudo apt-get install -y dotnet-sdk-8.0 python3 python3-pip fsharp mono-complete
           
-
   format:
     runs-on: ubuntu-latest
     needs: setup
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
+      # Format code with Fantomas (uncomment if needed)
       # - name: Format F# code with Fantomas
       #   run: | 
       #     dotnet tool install fantomas-tool --global --version "4.*"
-      #     fantomas src --recurse
+      #     fantomas multiset --recurse
           
       - name: Upload formatted files
         uses: actions/upload-artifact@v4
         with:
           name: formatted-src
+          path: multiset
   
   build:
     runs-on: ubuntu-latest
     needs: format
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build task
+        working-directory: multiset
         run: |
           dotnet build --configuration Release
           
@@ -58,18 +58,20 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: '**/bin/Release'
+          path: multiset/**/bin/Release
 
   task:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Run task application
+        working-directory: multiset
         run: |
-          dotnet run --project --configuration Release
+          dotnet run --configuration Release
 
       - name: Run task tests
-        run: cd src/tests && dotnet test
+        working-directory: multiset/src/tests
+        run: dotnet test
