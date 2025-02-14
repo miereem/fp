@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'euler/**'
   pull_request:
     branches:
       - master
@@ -40,7 +42,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: formatted-src
-          path: src
   
   build:
     runs-on: ubuntu-latest
