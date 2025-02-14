@@ -1,11 +1,11 @@
-name: multiset
+name: module13
 
 on:
   push:
     branches:
       - master
     paths:
-      - "multiset/**"
+      - "13/**"
   pull_request:
     branches:
       - master
@@ -30,17 +30,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Format code with Fantomas (uncomment if needed)
-      # - name: Format F# code with Fantomas
-      #   run: |
-      #     dotnet tool install fantomas-tool --global --version "4.*"
-      #     fantomas multiset --recurse
-
       - name: Upload formatted files
         uses: actions/upload-artifact@v4
         with:
           name: formatted-src
-          path: multiset
+          path: euler/13
 
   build:
     runs-on: ubuntu-latest
@@ -50,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build task
-        working-directory: multiset
+        working-directory: euler/13
         run: |
           dotnet build --configuration Release
 
@@ -58,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: multiset/**/bin/Release
+          path: euler/13/**/bin/Release
 
   test:
     runs-on: ubuntu-latest
@@ -68,10 +62,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run application
-        working-directory: multiset
+        working-directory: euler/13
         run: |
           dotnet run --configuration Release
 
       - name: Run tests
-        working-directory: multiset/tests
+        working-directory: euler/13/13test
         run: dotnet test

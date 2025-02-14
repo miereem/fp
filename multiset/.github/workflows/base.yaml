@@ -1,74 +1,71 @@
-name: Lab2
+name: multiset
 
 on:
   push:
     branches:
-      - main
+      - master
+    paths:
+      - "multiset/**"
   pull_request:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y dotnet-sdk-8.0 python3 python3-pip fsharp
-          sudo apt-get update
-          sudo apt-get install mono-complete
-          
+          sudo apt-get install -y dotnet-sdk-8.0 python3 python3-pip fsharp mono-complete
 
   format:
     runs-on: ubuntu-latest
     needs: setup
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Format F# code with Fantomas
-        run: | 
-          dotnet tool install fantomas-tool --global --version "4.*"
-          fantomas src --recurse
-          
       - name: Upload formatted files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: formatted-src
-          path: src
-  
+          path: multiset
+
   build:
     runs-on: ubuntu-latest
     needs: format
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build task
+        working-directory: multiset
         run: |
-          dotnet build src --configuration Release
-          
+          dotnet build --configuration Release
+
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
-          path: '**/bin/Release'
+          path: multiset/**/bin/Release
 
-  task:
+  test:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Check out code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run task application
+      - name: Run application
+        working-directory: multiset
         run: |
-          dotnet run --project src --configuration Release
+          dotnet run --configuration Release
 
-      - name: Run task tests
-        run: cd src/tests && dotnet test
+      - name: Run tests
+        working-directory: multiset/tests
+        run: dotnet test
