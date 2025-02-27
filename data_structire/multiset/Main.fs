@@ -1,6 +1,6 @@
 module Main
 open System
-open Program
+open Multiset
 
 [<EntryPoint>]
 let main _ =
