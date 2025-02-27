@@ -3,7 +3,7 @@
 open System
 
 type MultiSet<'T when 'T : equality> =
-    private {
+     {
         Table : (int * 'T * int) option array  // (хэш, элемент, количество)
         Capacity : int
         Size : int
