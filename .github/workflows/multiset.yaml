@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - "multiset/**"
+      - "data_structure/multiset/**"
   pull_request:
     branches:
       - master
@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: formatted-src
-          path: multiset
+          path: data_structure/multiset
 
   build:
     runs-on: ubuntu-latest
@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build task
-        working-directory: multiset
+        working-directory: data_structure/multiset
         run: |
           dotnet build --configuration Release
 
@@ -62,7 +62,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run application
-        working-directory: multiset
+        working-directory: data_structure/multiset
         run: |
           dotnet run --configuration Release
 
