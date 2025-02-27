@@ -42,12 +42,10 @@ let ``Union of two sets contains all elements from both`` () =
     let property (set1 : MultiSet<int>) (set2 : MultiSet<int>) =
         let unionSet = union set1 set2
 
-        // Проверяем, что все элементы из set1 и set2 присутствуют в unionSet
         let allElements = 
             (set1 |> toList) @ (set2 |> toList)
             |> List.distinct
 
-        // Проверяем, что количество каждого элемента в unionSet равно сумме количеств из set1 и set2
         allElements |> List.forall (fun e ->
             count e unionSet = count e set1 + count e set2
         )
