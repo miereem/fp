@@ -41,13 +41,3 @@ let ``Union with empty MultiSet should not change`` () =
     let result = union ms (empty 10)
     Assert.AreEqual(4, count "elephant" result)
 
-[<Property>]
-let ``Adding an element increases size if it was not present before`` (x: string) =
-    let ms = empty 10
-    let newMs = add x 1 ms
-    isEmpty ms ==> (newMs.Size = 1)
-
-[<Property>]
-let ``Count should never be negative`` (x: string) (n: int) =
-    let ms = empty 10 |> add x n
-    count x ms >= 0

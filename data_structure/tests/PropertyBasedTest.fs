@@ -5,6 +5,8 @@ open FsCheck
 open Multiset
 open System
 open System.IO
+open FsCheck.Xunit
+
 
 // Helper function to compare two MultiSets for equality
 let areMultiSetsEqual (set1: MultiSet<'T>) (set2: MultiSet<'T>) =
@@ -79,23 +81,11 @@ let ``Union Property - Union with Empty Set Returns Original Set``() =
     Prop.forAll testMultiSet property
     |> Check.QuickThrowOnFailure
 
-// Property test: Union is associative
-[<Test>]
-let ``Associative Property - Union is Associative``() =
-    let property
-        (
-            set1: MultiSet<int>,
-            set2: MultiSet<int>,
-            set3: MultiSet<int>
-        ) =
-        let unionLeft = union (union set1 set2) set3
-        let unionRight = union set1 (union set2 set3)
-        areMultiSetsEqual unionLeft unionRight
-
-    let testTripleSet = Arb.fromGen (Gen.zip3 generateMultiSet generateMultiSet generateMultiSet)
-
-    Prop.forAll testTripleSet property
-    |> Check.QuickThrowOnFailure
+[<Property>]
+let ``Union is associative`` (set1 : MultiSet<int>, set2 : MultiSet<int>, set3 : MultiSet<int>) =
+    let left = union set1 (union set2 set3) // f(a, f(b, c))
+    let right = union (union set1 set2) set3 // f(f(a, b), c)
+    left = right
 
 // Property test: Empty set is empty
 [<Test>]
