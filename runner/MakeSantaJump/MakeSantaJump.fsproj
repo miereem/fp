@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MakeSantaJump</RootNamespace>
+    <AssemblyName>MakeSantaJump</AssemblyName>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.1.303" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="FontRendering.fs" />
+    <Compile Include="Game.fs" />
+    <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Santa.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="GameFont_0.png" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="GameFont.fnt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>
