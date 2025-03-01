@@ -67,4 +67,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: '**/bin/Release'
+          path: 'runner/MakeSantaJump/**/bin/Release'
