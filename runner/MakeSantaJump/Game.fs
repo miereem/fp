@@ -183,7 +183,7 @@ module Track =
         let availableHeight = gameBounds.Height - totalPadding
         let trackHeight = availableHeight / numTracks
 
-        let colors = [ Color.Red; Color.Blue; Color.Purple; Color.Brown; Color.Gold ]
+        let colors = [ Color.Blue; Color.SkyBlue; Color.Purple; Color.Brown; Color.Gold ]
         let keys = [ Keys.A; Keys.S; Keys.D; Keys.F; Keys.Space ]
 
         let makeTrack i =

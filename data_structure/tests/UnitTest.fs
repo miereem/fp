@@ -1,9 +1,9 @@
 module MultiSetTests
 
 open NUnit.Framework
-open FsCheck
-open FsCheck.NUnit
 open Multiset
+open NUnit.Framework
+open FsUnit
 
 [<Test>]
 let ``Empty MultiSet should be empty`` () =
@@ -41,3 +41,49 @@ let ``Union with empty MultiSet should not change`` () =
     let result = union ms (empty 10)
     Assert.AreEqual(4, count "elephant" result)
 
+[<Test>]
+let ``filter should keep elements that satisfy the predicate`` () =
+    let set = empty 10 |> add "apple" 2 |> add "banana" 1 |> add "cherry" 3
+    let predicate = fun e -> e = "apple"
+
+    let filteredSet = filter predicate set
+
+    count "apple" filteredSet |> should equal 2
+    count "cherry" filteredSet |> should equal 0
+    count "banana" filteredSet |> should equal 0
+
+[<Test>]
+let ``filter should return an empty MultiSet if no elements satisfy the predicate`` () =
+    let set = empty 10 |> add "apple" 2 |> add "banana" 1
+    let predicate = fun e -> e = "cherry" 
+
+    let filteredSet = filter predicate set
+
+    isEmpty filteredSet |> should be True
+
+[<Test>]
+let ``foldLeft should sum the counts of all elements`` () =
+    let set = empty 10 |> add "apple" 2 |> add "banana" 1 |> add "cherry" 3
+    let folder acc _ count = acc + count
+
+    let totalCount = foldLeft folder 0 set
+
+    totalCount |> should equal 6 
+
+[<Test>]
+let ``foldLeft should return the initial state for an empty MultiSet`` () =
+    let set = empty 10
+    let folder acc _ count = acc + count
+
+    let result = foldLeft folder 42 set 
+
+    result |> should equal 42
+
+[<Test>]
+let ``foldRight should return the initial state for an empty MultiSet`` () =
+    let set = empty 10
+    let folder element _ acc = sprintf "%s; %s" element acc
+
+    let result = foldRight folder "initial" set
+
+    result |> should equal "initial"

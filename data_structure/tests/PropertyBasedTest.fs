@@ -8,7 +8,6 @@ open System.IO
 open FsCheck.Xunit
 
 
-// Helper function to compare two MultiSets for equality
 let areMultiSetsEqual (set1: MultiSet<'T>) (set2: MultiSet<'T>) =
     if set1.Size <> set2.Size then
         false
@@ -20,7 +19,6 @@ let areMultiSetsEqual (set1: MultiSet<'T>) (set2: MultiSet<'T>) =
             | None, None -> true
             | _ -> false) set2.Table
 
-// Generator for creating random MultiSets
 let generateMultiSet =
     Gen.sized (fun size ->
         gen {
@@ -35,7 +33,6 @@ let generateMultiSet =
 
 let testMultiSet = Arb.fromGen generateMultiSet
 
-// Property test: Adding an element increases its count
 [<Test>]
 let ``Add Property - Adding Element Increases Count``() =
     let property (set: MultiSet<int>) =
@@ -46,7 +43,6 @@ let ``Add Property - Adding Element Increases Count``() =
     Prop.forAll testMultiSet property
     |> Check.QuickThrowOnFailure
 
-// Property test: Adding zero or negative count does not change the set
 [<Test>]
 let ``Add Property - Adding Zero or Negative Count Does Not Change Set``() =
     let property (set: MultiSet<int>) =
@@ -57,7 +53,6 @@ let ``Add Property - Adding Zero or Negative Count Does Not Change Set``() =
     Prop.forAll testMultiSet property
     |> Check.QuickThrowOnFailure
 
-// Property test: Count of an element not in the set is zero
 [<Test>]
 let ``Count Property - Count of Missing Element is Zero``() =
     let property (set: MultiSet<int>) =
@@ -70,7 +65,6 @@ let ``Count Property - Count of Missing Element is Zero``() =
     Prop.forAll testMultiSet property
     |> Check.QuickThrowOnFailure
 
-// Property test: Union with an empty set returns the original set
 [<Test>]
 let ``Union Property - Union with Empty Set Returns Original Set``() =
     let property (set: MultiSet<int>) =
@@ -87,7 +81,6 @@ let ``Union is associative`` (set1 : MultiSet<int>, set2 : MultiSet<int>, set3 :
     let right = union (union set1 set2) set3 // f(f(a, b), c)
     left = right
 
-// Property test: Empty set is empty
 [<Test>]
 let ``IsEmpty Property - Empty Set is Empty``() =
     let property () =
@@ -96,7 +89,6 @@ let ``IsEmpty Property - Empty Set is Empty``() =
 
     Check.QuickThrowOnFailure property
 
-// Property test: Non-empty set is not empty
 [<Test>]
 let ``IsEmpty Property - Non-Empty Set is Not Empty``() =
     let property (element: int) =
@@ -105,7 +97,6 @@ let ``IsEmpty Property - Non-Empty Set is Not Empty``() =
 
     Check.QuickThrowOnFailure property
 
-// SetUp method to prepare the environment before running tests
 [<OneTimeSetUp>]
 let initialize() =
     let stringWriter = new StringWriter()
