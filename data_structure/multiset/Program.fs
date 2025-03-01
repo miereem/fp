@@ -105,14 +105,23 @@ let union (set1 : MultiSet<'T>) (set2 : MultiSet<'T>) : MultiSet<'T> =
             | None -> acc) resultWithSet1
 
 let filter (predicate : 'T -> bool) (set : MultiSet<'T>) : MultiSet<'T> =
-    let newTable =
-        set.Table
-        |> Array.map (fun entry ->
-            match entry with
-            | Some (hash, e, c) when predicate e -> Some (hash, e, c)
-            | _ -> None)
-    { Table = newTable; Capacity = set.Capacity; Size = newTable |> Array.filter Option.isSome |> Array.length }
-
+    let newTable = Array.create set.Capacity None
+    let mutable newSize = 0
+    
+    for i in 0 .. set.Capacity - 1 do
+        match set.Table.[i] with
+        | Some (hash, e, c) when predicate e ->
+            let rec insert j =
+                let slot = findSlot hash set.Capacity j
+                match newTable.[slot] with
+                | None ->
+                    newTable.[slot] <- Some (hash, e, c)
+                    newSize <- newSize + 1
+                | _ -> insert (j + 1)
+            insert 0
+        | _ -> ()
+    
+    { Table = newTable; Capacity = set.Capacity; Size = newSize }
 
 let foldLeft (folder : 'State -> 'T -> int -> 'State) (state : 'State) (set : MultiSet<'T>) : 'State =
     set.Table
