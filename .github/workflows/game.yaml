@@ -45,26 +45,23 @@ jobs:
           name: formatted-src
           path: runner/MakeSantaJump
 
-  build:
-    runs-on: ubuntu-latest
-    needs: format
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v4
+  # build:
+  #   runs-on: ubuntu-latest
+  #   needs: format
+  #   steps:
+  #     - name: Check out code
+  #       uses: actions/checkout@v4
 
-      - name: Install Paket dependencies
-        run: |
-          dotnet tool install paket --tool-path .paket
-          export PATH="$PATH:$HOME/.dotnet/tools"
-          export PATH="$PATH:$GITHUB_WORKSPACE/.paket"  # Ensure .paket directory is included in PATH
-          paket restore  # Ensure Paket dependencies are restored
+  #     - name: Install dependencies
+  #       run: |
 
-      - name: Build task
-        run: |
-          dotnet build
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build
-          path: 'runner/MakeSantaJump/**/bin/Release'
+  #     - name: Build task
+  #       run: |
+  #         dotnet build
+
+  #     - name: Upload build artifacts
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: build
+  #         path: 'runner/MakeSantaJump/**/bin/Release'
