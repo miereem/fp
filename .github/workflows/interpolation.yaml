@@ -34,7 +34,7 @@ jobs:
       - name: Format F# code with Fantomas
         run: |
           dotnet tool install fantomas-tool --global --version "4.*"
-          fantomas src --recurse
+          fantomas interpolation --recurse
 
       - name: Upload formatted files
         uses: actions/upload-artifact@v4
@@ -51,13 +51,13 @@ jobs:
 
       - name: Build task
         run: |
-          dotnet build src --configuration Release
+          dotnet build interpolation --configuration Release
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build
-          path: '**/bin/Release'
+          path: 'interpolation/**/bin/Release'
 
   task:
     runs-on: ubuntu-latest
@@ -65,10 +65,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-
-      #- name: Run task application
-      #  run: |
-      #    dotnet run --project src --configuration Release
 
       - name: Run task tests
         run: cd interpolation/tests && dotnet test
