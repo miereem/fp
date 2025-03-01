@@ -23,7 +23,7 @@ let main (args) =
                 match parseResult with
                 | Ok point -> Some point
                 | Error errList ->
-                    printfn "Errorsss list:"
+                    printfn "Errors list:"
 
                     errList
                     |> Seq.map Validator.errorToString
