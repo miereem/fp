@@ -43,12 +43,10 @@ let add (element : 'T) (count : int) (set : MultiSet<'T>) : MultiSet<'T> =
             let slot = findSlot hash set.Capacity i
             match set.Table.[slot] with
             | None ->
-                let newTable = Array.copy set.Table
-                newTable.[slot] <- Some (hash, element, count)
+                let newTable = Array.mapi (fun idx value -> if idx = slot then Some (hash, element, count) else value) set.Table
                 { set with Table = newTable; Size = set.Size + 1 }
             | Some (_, e, c) when e = element ->
-                let newTable = Array.copy set.Table
-                newTable.[slot] <- Some (hash, element, c + count)
+                let newTable = Array.mapi (fun idx value -> if idx = slot then Some (hash, element, c + count) else value) set.Table
                 { set with Table = newTable }
             | _ -> loop (i + 1) set
         loop 0 set
@@ -105,23 +103,20 @@ let union (set1 : MultiSet<'T>) (set2 : MultiSet<'T>) : MultiSet<'T> =
             | None -> acc) resultWithSet1
 
 let filter (predicate : 'T -> bool) (set : MultiSet<'T>) : MultiSet<'T> =
-    let newTable = Array.create set.Capacity None
-    let mutable newSize = 0
-    
-    for i in 0 .. set.Capacity - 1 do
-        match set.Table.[i] with
-        | Some (hash, e, c) when predicate e ->
-            let rec insert j =
-                let slot = findSlot hash set.Capacity j
-                match newTable.[slot] with
-                | None ->
-                    newTable.[slot] <- Some (hash, e, c)
-                    newSize <- newSize + 1
-                | _ -> insert (j + 1)
-            insert 0
-        | _ -> ()
-    
-    { Table = newTable; Capacity = set.Capacity; Size = newSize }
+    let rec processTable i filteredSet =
+        if i >= set.Capacity then
+            filteredSet
+        else
+            match set.Table.[i] with
+            | Some (_, e, c) when predicate e ->
+                let updatedSet = add e c filteredSet
+                processTable (i + 1) updatedSet
+            | _ -> processTable (i + 1) filteredSet
+
+    let emptySet = { Table = Array.create set.Capacity None; Capacity = set.Capacity; Size = 0 }
+    processTable 0 emptySet
+
+// использую свою add 
 
 let foldLeft (folder : 'State -> 'T -> int -> 'State) (state : 'State) (set : MultiSet<'T>) : 'State =
     set.Table

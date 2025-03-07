@@ -5,7 +5,7 @@ open Microsoft.Xna.Framework
 open Microsoft.Xna.Framework.Graphics
 open Microsoft.Xna.Framework.Input
 
-// Change these values to alter game balance.
+
 let gravity = 0.02f
 let speed = -0.2f
 let minObstacleWidth = 20
