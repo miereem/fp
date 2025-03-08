@@ -11,10 +11,10 @@ let main (args) =
     if stepArg.IsSome && methodsArg |> Seq.forall Result.isOk then
 
         let step = stepArg.Value
-        printfn "1. Chosen step: %.2f" step
+        printfn "1. Step: %.2f" step
 
         let methods = methodsArg |> Seq.choose Result.toOption
-        printfn "2. Chosen methods: %A" methods
+        printfn "2. Methods: %A" methods
 
         let points =
             Utils.readLines
